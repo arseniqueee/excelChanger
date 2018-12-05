@@ -10,11 +10,15 @@
     <!--<packaging>jar</packaging>-->
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.17</version>
+            <version>3.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.12</version>
         </dependency>
 
     </dependencies>
@@ -30,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>Runner</Main-Class>
+                            <Main-Class>ExcelGUI</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
