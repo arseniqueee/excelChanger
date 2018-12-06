@@ -66,6 +66,10 @@ public class ExcelGUI extends JFrame {
             }
         });
 
+
+
+
+
         choose1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
@@ -78,6 +82,9 @@ public class ExcelGUI extends JFrame {
                 }
             }
         });
+
+
+
 
         choose2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -93,6 +100,8 @@ public class ExcelGUI extends JFrame {
         });
 
     }
+
+
 
     public void test(String dir1, String dir2) {
         String[] textMain = new String[200];
@@ -223,6 +232,7 @@ public class ExcelGUI extends JFrame {
             e1.printStackTrace();
         }
     }
+
 
 
     public static void main(String[] args) {
