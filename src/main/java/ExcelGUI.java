@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -11,6 +13,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ExcelGUI extends JFrame {
 
@@ -89,6 +95,15 @@ public class ExcelGUI extends JFrame {
     }
 
     public void test(String dir1, String dir2) {
+        String[] textMain = new String[200];
+        String[] address = new String[200];
+        String[] snt = new String[200];
+        Float[] square = new Float[200];
+        Integer[] price = new Integer[200];
+        Float[] udel = new Float[200];
+        String[] electro = new String[200];
+        String[] links = new String[200];
+
         try {
             File myFile = new File(dir1);
             FileInputStream fis = null;
@@ -99,8 +114,42 @@ public class ExcelGUI extends JFrame {
             }
             XSSFWorkbook workbook = new XSSFWorkbook(fis);
             XSSFSheet sheet = workbook.getSheetAt(0);
-            XSSFCell cell = sheet.getRow(0).getCell(0);
-            String str = cell.getStringCellValue();
+            XSSFCell cell = null;
+            XSSFRow row = null;
+            for (int i = 1; i<200; i++){
+                row = sheet.getRow(i);
+                cell = row.getCell(7);
+                textMain[i] = cell.getStringCellValue();
+                cell = row.getCell(5);
+                address[i] = cell.getStringCellValue();
+                cell = row.getCell(9);
+                snt[i] = cell.getStringCellValue();
+                cell = row.getCell(3);
+                String[] parse = cell.getStringCellValue().split(", ");
+
+                if (NumberUtils.isNumber(parse[0])){
+                    if (parse[1].equals("сот.")){
+                        square[i] = Float.parseFloat(parse[0]) * 100;
+                    }else if (parse[1].equals("га.")){
+                        square[i] = Float.parseFloat(parse[0]) * 1000;
+                    }else {
+                        square[i] = Float.parseFloat(parse[0]);
+                    }
+                }else {
+                    square[i] = Float.valueOf(0);
+                }
+
+                cell = row.getCell(8);
+                parse = cell.getStringCellValue().split(" ");
+                price[i] = Integer.parseInt(parse[0]);
+                udel[i] = price[i] / square[i];
+                cell = row.getCell(10);
+                electro[i] = cell.getStringCellValue();
+                cell = row.getCell(11);
+                links[i] = cell.getStringCellValue();
+            }
+
+//            String str = cell.getStringCellValue();
             fis.close();
             File myFileFinal = null;
             try{
@@ -112,16 +161,51 @@ public class ExcelGUI extends JFrame {
 
             workbook = new XSSFWorkbook(fis);
             sheet = workbook.getSheetAt(0);
-            XSSFRow row = null;
             try {
-                row = sheet.getRow(0);
-                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+
+                for (int i = 1; i<200; i++){
+                    row = sheet.getRow(i);
+                    cell = row.getCell(3);
+                    cell.setCellValue(textMain[i]);
+                    cell = row.getCell(12);
+                    cell.setCellValue(address[i]);
+                    cell = row.getCell(26);
+                    cell.setCellValue(square[i]);
+                    cell = row.getCell(27);
+                    cell.setCellValue(price[i]);
+                    cell = row.getCell(28);
+                    cell.setCellValue(udel[i]);
+                    cell = row.getCell(20);
+                    cell.setCellValue(snt[i]);
+                    Date date = new Date();
+                    SimpleDateFormat formatForDateNow = new SimpleDateFormat("dd.MM.yyyy");
+                    cell = row.getCell(33);
+                    cell.setCellValue(date);
+                    if (electro[i].contains("Электричество")){
+                        cell = row.getCell(39);
+                        cell.setCellValue("да");
+                    }
+                    if (electro[i].contains("Водоснабжение")){
+                        cell = row.getCell(40);
+                        cell.setCellValue("да");
+                    }
+                    if (electro[i].contains("Газ")){
+                        cell = row.getCell(42);
+                        cell.setCellValue("да");
+                    }
+                    if (electro[i].contains("Канализация")){
+                        cell = row.getCell(41);
+                        cell.setCellValue("да");
+                    }
+                    cell = row.getCell(35);
+                    cell.setCellValue(links[i]);
+                }
+
             }catch (NullPointerException ex){
-                row = sheet.createRow(0);
-                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+                System.out.println(ex);
             }
 
-            cell.setCellValue(str);
+//            cell.setCellValue(str);
             try{
                 FileOutputStream fileOutputStream = new FileOutputStream(myFileFinal);
                 workbook.write(fileOutputStream);
