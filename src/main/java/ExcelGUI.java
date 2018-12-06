@@ -102,9 +102,9 @@ public class ExcelGUI extends JFrame {
             XSSFCell cell = sheet.getRow(0).getCell(0);
             String str = cell.getStringCellValue();
             fis.close();
-
-            File myFileFinal = new File(dir2);
+            File myFileFinal = null;
             try{
+                myFileFinal = new File(dir2);
                 fis = new FileInputStream(myFileFinal);
             }catch (FileNotFoundException ex){
                 label3.setText("Второй файл не найден");
@@ -112,14 +112,12 @@ public class ExcelGUI extends JFrame {
 
             workbook = new XSSFWorkbook(fis);
             sheet = workbook.getSheetAt(0);
-//            cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
-
-//            Запасной вариант решения NullPoinerException Cell
+            XSSFRow row = null;
             try {
-                XSSFRow row = sheet.getRow(0);
+                row = sheet.getRow(0);
                 cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
             }catch (NullPointerException ex){
-                XSSFRow row = sheet.createRow(0);
+                row = sheet.createRow(0);
                 cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
             }
 
