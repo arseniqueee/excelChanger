@@ -1,6 +1,7 @@
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,7 +14,7 @@ import java.io.*;
 
 public class ExcelGUI extends JFrame {
 
-    private JButton file1 = new JButton("Hi Baby");
+    private JButton file1 = new JButton("Check");
     private JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
     private JLabel label1 = new JLabel("Исходный файл:");
     private JLabel label2 = new JLabel("Входящий файл:");
@@ -24,9 +25,9 @@ public class ExcelGUI extends JFrame {
     private JButton choose2 = new JButton("Выбрать");
 
 
-    public ExcelGUI(){
+    public ExcelGUI() {
         super("Excel");
-        this.setBounds(100, 100, 540, 500);
+        this.setBounds(100, 100, 540, 150);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
         this.setResizable(false);
@@ -36,22 +37,21 @@ public class ExcelGUI extends JFrame {
         container.add(file1);
         file1.setBounds(10, 70, 100, 20);
         container.add(label1);
-        label1.setBounds(10,10,100,15);
+        label1.setBounds(10, 10, 100, 15);
         container.add(label2);
-        label2.setBounds(10,40,100,15);
+        label2.setBounds(10, 40, 100, 15);
         container.add(text1);
-        text1.setBounds(115, 10, 300,20);
+        text1.setBounds(115, 10, 300, 20);
         text1.setEditable(false);
         container.add(text2);
-        text2.setBounds(115, 40, 300,20);
+        text2.setBounds(115, 40, 300, 20);
         text2.setEditable(false);
         container.add(choose1);
         choose1.setBounds(420, 10, 100, 20);
         container.add(choose2);
         choose2.setBounds(420, 40, 100, 20);
         container.add(label3);
-        label3.setBounds(150,75,100,15);
-
+        label3.setBounds(150, 75, 100, 15);
 
 
         file1.addActionListener(new ActionListener() {
@@ -88,7 +88,7 @@ public class ExcelGUI extends JFrame {
 
     }
 
-    public void test(String dir1, String dir2){
+    public void test(String dir1, String dir2) {
         try {
             File myFile = new File(dir1);
             FileInputStream fis = new FileInputStream(myFile);
@@ -101,13 +101,22 @@ public class ExcelGUI extends JFrame {
             FileInputStream fis1 = new FileInputStream(myFileFinal);
             workbook = new XSSFWorkbook(fis1);
             sheet = workbook.getSheetAt(0);
-            cell = sheet.getRow(0).getCell(0, Row.CREATE_NULL_AS_BLANK);
+            XSSFRow row = sheet.createRow(0);
+            cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+
+//            try {
+//                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+//            }catch (NullPointerException ex){
+//                row = sheet.createRow(0);
+//                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+//            }
+
             cell.setCellValue(str);
             FileOutputStream fileOutputStream = new FileOutputStream(myFileFinal);
             workbook.write(fileOutputStream);
             fis1.close();
             fileOutputStream.close();
-            label3.setText("KAEF");
+            label3.setText("Done!");
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         } catch (IOException e1) {
@@ -116,7 +125,7 @@ public class ExcelGUI extends JFrame {
     }
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ExcelGUI gui = new ExcelGUI();
         gui.setVisible(true);
     }
