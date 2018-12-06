@@ -42,16 +42,16 @@ public class ExcelGUI extends JFrame {
         label2.setBounds(10, 40, 100, 15);
         container.add(text1);
         text1.setBounds(115, 10, 300, 20);
-        text1.setEditable(false);
+//        text1.setEditable(false);
         container.add(text2);
         text2.setBounds(115, 40, 300, 20);
-        text2.setEditable(false);
+//        text2.setEditable(false);
         container.add(choose1);
         choose1.setBounds(420, 10, 100, 20);
         container.add(choose2);
         choose2.setBounds(420, 40, 100, 20);
         container.add(label3);
-        label3.setBounds(150, 75, 100, 15);
+        label3.setBounds(150, 75, 300, 15);
 
 
         file1.addActionListener(new ActionListener() {
@@ -91,32 +91,50 @@ public class ExcelGUI extends JFrame {
     public void test(String dir1, String dir2) {
         try {
             File myFile = new File(dir1);
-            FileInputStream fis = new FileInputStream(myFile);
+            FileInputStream fis = null;
+            try{
+                fis = new FileInputStream(myFile);
+            }catch (FileNotFoundException ex){
+                label3.setText("Первый файл не найден");
+            }
             XSSFWorkbook workbook = new XSSFWorkbook(fis);
             XSSFSheet sheet = workbook.getSheetAt(0);
             XSSFCell cell = sheet.getRow(0).getCell(0);
             String str = cell.getStringCellValue();
             fis.close();
-            File myFileFinal = new File(dir2);
-            FileInputStream fis1 = new FileInputStream(myFileFinal);
-            workbook = new XSSFWorkbook(fis1);
-            sheet = workbook.getSheetAt(0);
-            XSSFRow row = sheet.createRow(0);
-            cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
 
-//            try {
-//                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
-//            }catch (NullPointerException ex){
-//                row = sheet.createRow(0);
-//                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
-//            }
+            File myFileFinal = new File(dir2);
+            try{
+                fis = new FileInputStream(myFileFinal);
+            }catch (FileNotFoundException ex){
+                label3.setText("Второй файл не найден");
+            }
+
+            workbook = new XSSFWorkbook(fis);
+            sheet = workbook.getSheetAt(0);
+//            cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+
+//            Запасной вариант решения NullPoinerException Cell
+            try {
+                XSSFRow row = sheet.getRow(0);
+                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+            }catch (NullPointerException ex){
+                XSSFRow row = sheet.createRow(0);
+                cell = row.getCell(0, Row.CREATE_NULL_AS_BLANK);
+            }
 
             cell.setCellValue(str);
-            FileOutputStream fileOutputStream = new FileOutputStream(myFileFinal);
-            workbook.write(fileOutputStream);
-            fis1.close();
-            fileOutputStream.close();
-            label3.setText("Done!");
+            try{
+                FileOutputStream fileOutputStream = new FileOutputStream(myFileFinal);
+                workbook.write(fileOutputStream);
+                fis.close();
+                fileOutputStream.close();
+                label3.setText("Done!");
+            }catch (FileNotFoundException ex){
+                label3.setText("Закройте файл");
+            }
+
+
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         } catch (IOException e1) {
