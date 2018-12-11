@@ -208,7 +208,9 @@ public class ExcelGUI extends JFrame {
                 } else if (cell.getStringCellValue().contains("таунхауса")) {
                     type[i] = "Таунхаус";
                 } else if (cell.getStringCellValue().contains("склада")) {
-                    type[i] = "склад";
+                    type[i] = "Склад";
+                } else if (cell.getStringCellValue().contains("здания")) {
+                    type[i] = "Здание";
                 }
 
 
@@ -272,6 +274,9 @@ public class ExcelGUI extends JFrame {
                 } else if (getColumnAdress("Этаж", sheet) != 0){
                     cell = row.getCell(getColumnAdress("Этаж", sheet));
                     String[] floors = cell.getStringCellValue().split("/");
+                    if(type[i].equals("Здание")) {
+                        allFloor[i] = floors[0];
+                    }
                     floor[i] = floors[0];
                     if (floors.length > 1){
                         allFloor[i] = floors[1];
