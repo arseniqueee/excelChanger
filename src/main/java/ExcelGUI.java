@@ -193,7 +193,7 @@ public class ExcelGUI extends JFrame {
                     type[i] = "Гараж";
                 } else if (cell.getStringCellValue().contains("квартиры")) {
                     type[i] = "Квартира";
-                } else if (cell.getStringCellValue().contains("комнтаы")) {
+                } else if (cell.getStringCellValue().contains("комнаты")) {
                     type[i] = "Комната";
                 } else if (cell.getStringCellValue().contains("помещения")) {
                     type[i] = "ПСН";
@@ -203,6 +203,12 @@ public class ExcelGUI extends JFrame {
                     type[i] = "Участок";
                 } else if (cell.getStringCellValue().contains("земли")) {
                     type[i] = "Земля";
+                } else if (cell.getStringCellValue().contains("дома") || cell.getStringCellValue().contains("коттеджа")) {
+                    type[i] = "Дом";
+                } else if (cell.getStringCellValue().contains("таунхауса")) {
+                    type[i] = "Таунхаус";
+                } else if (cell.getStringCellValue().contains("склада")) {
+                    type[i] = "склад";
                 }
 
 
@@ -246,17 +252,20 @@ public class ExcelGUI extends JFrame {
                 }
 
                 //Этажи и материал стен
-                if (type[i].equals("Квартира") || type[i].equals("Комната")){
+                if (type[i].equals("Квартира") || type[i].equals("Комната") || type[i].equals("Дом") || type[i].equals("Таунхаус")){
                     cell = row.getCell(getColumnAdress("Дом", sheet));
                     String[] floors = cell.getStringCellValue().split(", ");
                     String[] floorsNew = floors[0].split("/");
                     if (floorsNew[0] != null){
                         floor[i] = floorsNew[0];
                     }
-                    if (floorsNew[1] != null){
-                        allFloor[i] = floorsNew[1];
+                    if (floorsNew.length > 1){
+                        if (floorsNew[1] != null){
+                            allFloor[i] = floorsNew[1];
+                        }
                     }
-                    if (floors.length > 1){
+
+                    if (floors.length > 1 && floors[1].matches("[а-яА-я]+]")){
                         material[i] = floors[1].replace("й","е");
                     }
 
