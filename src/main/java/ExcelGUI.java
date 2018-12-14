@@ -182,9 +182,9 @@ public class ExcelGUI extends JFrame {
                 String[] munR = address[i].split(", ");
                 if (munR[1].contains("район")) {
                     munR[1] = munR[1].replace("район", "");
-                    mr[i] = "р-н " + munR[1];
+                    mr[i] = "р-н " + munR[1].trim();
                 } else {
-                    mr[i] = "г " + munR[1];
+                    mr[i] = "г " + munR[1].trim();
                 }
                 //Тип
                 cell = row.getCell(getColumnAdress("Тип", sheet));
@@ -219,16 +219,16 @@ public class ExcelGUI extends JFrame {
                 if (mr[i].contains("р-н")) {
                     if (munR[2].contains("пос.")) {
                         munR[2] = munR[2].replace("пос.", "");
-                        np[i] = "п " + munR[2];
+                        np[i] = "п " + munR[2].trim();
                     } else if (munR[2].contains("с.")) {
                         munR[2] = munR[2].replace("с.", "");
-                        np[i] = "c " + munR[2];
+                        np[i] = "c " + munR[2].trim();
                     } else if (munR[2].contains("д.")) {
                         munR[2] = munR[2].replace("д.", "д");
-                        np[i] = "c " + munR[2];
+                        np[i] = "c " + munR[2].trim();
                     } else if (munR[2].contains("рп")) {
                         munR[2] = munR[2].replace("рп", "");
-                        np[i] = "рп " + munR[2];
+                        np[i] = "рп " + munR[2].trim();
                     }
                 } else {
                     np[i] = mr[i];
@@ -237,14 +237,14 @@ public class ExcelGUI extends JFrame {
                 //Парс улицы
                 for (int j = 0; j < munR.length; j++){
                     if (munR[j].contains("улица")){
-                        munR[2] = munR[2].replace("улица", "");
-                        street[i] = "ул " + munR[2].trim();
+                        munR[j] = munR[j].replace("улица", "");
+                        street[i] = "ул " + munR[j].trim();
                     } else if (munR[j].contains("проезд")) {
-                        munR[2] = munR[2].replace("проезд", "");
-                        street[i] = "проезд " + munR[2].trim();
+                        munR[j] = munR[j].replace("проезд", "");
+                        street[i] = "проезд " + munR[j].trim();
                     } else if (munR[j].contains("тупик")) {
-                        munR[2] = munR[2].replace("тупик", "");
-                        street[i] = "тупик " + munR[2].trim();
+                        munR[j] = munR[j].replace("тупик", "");
+                        street[i] = "тупик " + munR[j].trim();
                     }
                 }
                 //Номер дома
@@ -267,7 +267,7 @@ public class ExcelGUI extends JFrame {
                         }
                     }
 
-                    if (floors.length > 1 && floors[1].matches("[а-яА-я]+]")){
+                    if (floors.length > 1 && floors[1].matches("[а-яА-Я]+")){
                         material[i] = floors[1].replace("й","е");
                     }
 
